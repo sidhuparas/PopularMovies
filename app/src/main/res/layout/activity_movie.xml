@@ -12,8 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-
-    
         <ImageView
             android:id="@+id/backdrop"
             android:scaleType="centerCrop"
@@ -32,7 +30,8 @@
             android:layout_height="200dp"
             android:layout_marginTop="100dp"
             android:src="@color/black"
-            android:layout_marginLeft="30dp"/>
+            android:layout_marginLeft="30dp"
+            android:transitionName="@string/img_trans"/>
 
         <TextView
             android:id="@+id/title"

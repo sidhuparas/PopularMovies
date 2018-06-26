@@ -4,4 +4,6 @@
     <string name="chip1">Popular</string>
     <string name="chip2">Top Rated</string>
     <string name="sort">Sort by:</string>
+
+    <string name="img_trans">image_transition</string>
 </resources>

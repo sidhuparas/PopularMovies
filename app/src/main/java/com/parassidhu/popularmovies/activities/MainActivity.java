@@ -3,6 +3,8 @@ package com.parassidhu.popularmovies.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.chip.Chip;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -130,7 +132,11 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString(Constants.B_OVERVIEW, item.getOverview());
 
                 intent.putExtra("Values", bundle);
-                startActivity(intent);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        MainActivity.this, v, getResources().getString(R.string.img_trans));
+
+                startActivity(intent, options.toBundle());
             }
         });
     }
