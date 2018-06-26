@@ -5,37 +5,92 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.parassidhu.popularmovies.R;
+import com.parassidhu.popularmovies.models.MoviesItem;
+import com.parassidhu.popularmovies.utils.Constants;
+import com.squareup.picasso.Picasso;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
+    private ArrayList<MoviesItem> moviesItems;
 
-    public MoviesAdapter(Context context){
+    public MoviesAdapter(Context context, ArrayList<MoviesItem> moviesItems) {
         this.context = context;
+        this.moviesItems = moviesItems;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = View.inflate(context, R.layout.row_movie, viewGroup);
+        View view = View.inflate(context, R.layout.row_movie, null);
         return new MoviesListHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
+        ((MoviesListHolder) viewHolder).bind(i);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return moviesItems.size();
     }
 
-    private class MoviesListHolder extends RecyclerView.ViewHolder {
+    class MoviesListHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.image) ImageView image;
+        @BindView(R.id.title) TextView title;
+        @BindView(R.id.year) TextView year;
 
         MoviesListHolder(View view) {
             super(view);
+            ButterKnife.bind(this, view);
         }
+
+        void bind(int position) {
+            MoviesItem item = moviesItems.get(position);
+
+            String path = Constants.BASE_IMAGE + item.getPoster_path();
+
+            Picasso.get().load(path)
+                    .into(image);
+
+            String release_date = item.getRelease_date();
+            title.setText(item.getTitle());
+
+            String s_year = getYear(release_date);
+
+            if (!s_year.isEmpty()) {
+                year.setText(s_year);
+            }
+        }
+
+        String getYear(String release_date) {
+            Date date = null;
+            String years = "";
+            try {
+                Calendar calendar = Calendar.getInstance();
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(release_date);
+                calendar.setTime(date);
+                years = String.valueOf(calendar.get(Calendar.YEAR));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return years;
+        }
+
     }
 }

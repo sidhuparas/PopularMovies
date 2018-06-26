@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PopularMovies</string>
+
+    <string name="chip1">Popular</string>
+    <string name="chip2">Top Rated</string>
+    <string name="sort">Sort by:</string>
 </resources>

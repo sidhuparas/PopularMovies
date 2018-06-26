@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/white"
+    tools:context=".MovieActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+
+    
+        <ImageView
+            android:id="@+id/backdrop"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:src="@color/colorPrimaryDark"
+            android:layout_height="200dp" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/poster"
+            android:layout_width="120dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="100dp"
+            android:src="@color/black"
+            android:layout_marginLeft="30dp"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/backdrop"
+            android:layout_toRightOf="@id/poster"
+            android:layout_margin="16dp"
+            android:textColor="@color/black"
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            tools:text="Title Here"/>
+
+        <TextView
+            android:id="@+id/releaseDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:textColor="@color/black"
+            tools:text="Release date"
+            android:layout_toRightOf="@id/poster"
+            android:layout_marginStart="16dp"/>
+
+        <TextView
+            android:id="@+id/favorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Favs"
+            android:layout_below="@id/title"
+            android:textColor="@color/black"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentEnd="true"
+            android:drawableStart="@drawable/fav"
+            android:drawablePadding="8dp"/>
+
+        <TextView
+            android:id="@+id/synopsis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/poster"
+            android:textColor="@color/black"
+            tools:text="Release date"
+            android:text="Synopsis"
+            android:textStyle="bold"
+            android:layout_margin="20dp"/>
+
+
+        <TextView
+            android:id="@+id/overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/synopsis"
+            android:textColor="@color/black"
+            tools:text="Release date"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"/>
+        
+    </RelativeLayout>
+    
+</android.support.v4.widget.NestedScrollView>
