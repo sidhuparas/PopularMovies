@@ -1,6 +1,8 @@
 package com.parassidhu.popularmovies.models;
 
-public class MoviesItem {
+import android.os.Parcelable;
+
+public class MoviesItem{
 
     private String vote_count, id, vote_average, title, popularity, poster_path, backdrop_path, overview, release_date;
 

@@ -1,4 +1,4 @@
-package com.parassidhu.popularmovies;
+package com.parassidhu.popularmovies.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parassidhu.popularmovies.R;
 import com.parassidhu.popularmovies.utils.Constants;
 import com.squareup.picasso.Picasso;
 

@@ -20,9 +20,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MovieActivity"
+            android:name=".activities.MovieActivity"
             android:theme="@style/AppTheme"
-            android:parentActivityName=".MovieActivity"/>
+            android:parentActivityName=".activities.MovieActivity"/>
     </application>
 
 </manifest>
