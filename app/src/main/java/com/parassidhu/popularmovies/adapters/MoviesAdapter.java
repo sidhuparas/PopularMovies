@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parassidhu.popularmovies.R;
-import com.parassidhu.popularmovies.models.MoviesItem;
+import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -25,9 +25,9 @@ import butterknife.ButterKnife;
 public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private ArrayList<MoviesItem> moviesItems;
+    private ArrayList<MovieItem> moviesItems;
 
-    public MoviesAdapter(Context context, ArrayList<MoviesItem> moviesItems) {
+    public MoviesAdapter(Context context, ArrayList<MovieItem> moviesItems) {
         this.context = context;
         this.moviesItems = moviesItems;
     }
@@ -61,7 +61,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
         void bind(int position) {
-            MoviesItem item = moviesItems.get(position);
+            MovieItem item = moviesItems.get(position);
 
             String path = Constants.BASE_IMAGE + item.getPoster_path();
 

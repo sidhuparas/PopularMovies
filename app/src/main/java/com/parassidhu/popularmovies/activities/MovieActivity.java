@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parassidhu.popularmovies.R;
+import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -38,12 +39,15 @@ public class MovieActivity extends AppCompatActivity {
     // Gets values from Intent and pass to setValuesToViews method
     private void getValuesFromIntent() {
         if (getIntent().hasExtra("Values")){
-            String backdrop = customGetExtra(Constants.B_BACKDROP);
-            String poster = customGetExtra(Constants.B_POSTER);
-            String title = customGetExtra(Constants.B_TITLE);
-            String release_date = customGetExtra(Constants.B_RELEASE_DATE);
-            String vote_average = customGetExtra(Constants.B_VOTE_AVERAGE);
-            String overview = customGetExtra(Constants.B_OVERVIEW);
+            Bundle bundle = getIntent().getBundleExtra("Values");
+            MovieItem item = bundle.getParcelable(MainActivity.MOVIE_KEY);
+
+            String backdrop = Constants.BASE_BACKDROP + item.getBackdrop_path();
+            String poster = Constants.BASE_IMAGE + item.getPoster_path();
+            String title = item.getTitle();
+            String release_date = item.getRelease_date();
+            String vote_average = item.getVote_average();
+            String overview = item.getOverview();
 
             setValuesToViews(backdrop, poster, title, release_date, vote_average, overview);
         }

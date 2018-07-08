@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.parassidhu.popularmovies.R;
 import com.parassidhu.popularmovies.adapters.MoviesAdapter;
-import com.parassidhu.popularmovies.models.MoviesItem;
+import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
 import com.parassidhu.popularmovies.utils.ItemClickSupport;
 
@@ -43,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.popular) Chip popular;
     @BindView(R.id.top_rated) Chip top_rated;
 
-    private ArrayList<MoviesItem> moviesItems = new ArrayList<>();
+    private ArrayList<MovieItem> moviesItems = new ArrayList<>();
+
+    public static final String MOVIE_KEY = "movie_item";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                                 Gson gson = new Gson();
                                 moviesItems =
                                         gson.fromJson(jsonArray.toString(),
-                                                new TypeToken<ArrayList<MoviesItem>>(){}.getType());
+                                                new TypeToken<ArrayList<MovieItem>>(){}.getType());
                                 MoviesAdapter adapter = new MoviesAdapter(MainActivity.this, moviesItems);
                                 moviesList.setAdapter(adapter);
                                 controlViews(false,true);
@@ -121,16 +123,12 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, MovieActivity.class);
                 Bundle bundle = new Bundle();
 
-                MoviesItem item = moviesItems.get(position);
-                bundle.putString(Constants.B_BACKDROP, Constants.BASE_BACKDROP + item.getBackdrop_path());
-                bundle.putString(Constants.B_POSTER, Constants.BASE_IMAGE + item.getPoster_path());
-                bundle.putString(Constants.B_TITLE, item.getTitle());
-                bundle.putString(Constants.B_RELEASE_DATE, item.getRelease_date());
-                bundle.putString(Constants.B_VOTE_AVERAGE, item.getVote_average());
-                bundle.putString(Constants.B_OVERVIEW, item.getOverview());
+                MovieItem item = moviesItems.get(position);
 
+                bundle.putParcelable(MOVIE_KEY, item);
                 intent.putExtra("Values", bundle);
 
+                // Shared Element Transition
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         MainActivity.this, v, getResources().getString(R.string.img_trans));
 
