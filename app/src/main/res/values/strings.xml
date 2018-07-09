@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PopularMovies</string>
+    <string name="app_name">Popular Movies</string>
 
     <string name="chip1">Popular</string>
     <string name="chip2">Top Rated</string>

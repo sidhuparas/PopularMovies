@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Basic setup of views
     private void init() {
-        moviesList.setLayoutManager(new GridLayoutManager(this,3));
+        moviesList.setLayoutManager(new GridLayoutManager(this,2));
         setSupportActionBar(toolbar);
         setTitle("");
         controlViews(true,false);

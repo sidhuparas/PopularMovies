@@ -3,21 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".activities.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/app_icon"
+            android:layout_gravity="start" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
-            android:text="Popular Movies"
+            android:fontFamily="@font/lato_regular"
+            android:text="@string/app_name"
             android:textColor="@color/black"
             android:textSize="24sp" />
 
@@ -70,6 +75,8 @@
         android:id="@+id/moviesList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/chip" />
+        android:layout_below="@id/chip"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
 
 </RelativeLayout>
