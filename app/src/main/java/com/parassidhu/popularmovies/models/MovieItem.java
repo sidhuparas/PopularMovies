@@ -1,24 +1,50 @@
 package com.parassidhu.popularmovies.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
+@Entity(tableName = "movies")
 public class MovieItem implements  Parcelable{
 
-    private String vote_count, id, vote_average, title, popularity, poster_path, backdrop_path, overview, release_date;
+    @PrimaryKey
+    private String id;
 
-    private Boolean video, adult;
+    @ColumnInfo(name = "vote_average")
+    @SerializedName("vote_average")
+    private String voteAverage;
 
-    public String getVote_count() {
-        return vote_count;
-    }
+    private String title;
+
+    private String popularity;
+
+    @ColumnInfo(name = "poster_path")
+    @SerializedName("poster_path")
+    private String posterPath;
+
+    @ColumnInfo(name = "backdrop_path")
+    @SerializedName("backdrop_path")
+    private String backdropPath;
+
+    private String overview;
+
+    @ColumnInfo(name = "release_date")
+    @SerializedName("release_date")
+    private String releaseDate;
+
+    private Boolean video;
 
     public String getId() {
         return id;
     }
 
-    public String getVote_average() {
-        return vote_average;
+    public String getVoteAverage() {
+        return voteAverage;
     }
 
     public String getTitle() {
@@ -29,30 +55,36 @@ public class MovieItem implements  Parcelable{
         return popularity;
     }
 
-    public String getPoster_path() {
-        return poster_path;
+    public String getPosterPath() {
+        return posterPath;
     }
 
     public String getBackdrop_path() {
-        return backdrop_path;
+        return backdropPath;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public String getRelease_date() {
-        return release_date;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public Boolean getVideo() {
-        return video;
-    }
+    public Boolean getVideo() { return video; }
 
-    public Boolean getAdult() {
-        return adult;
+    public MovieItem(String id, String voteAverage, String title, String popularity,
+                     String posterPath, String backdropPath, String overview, String releaseDate, Boolean video) {
+        this.id = id;
+        this.voteAverage = voteAverage;
+        this.title = title;
+        this.popularity = popularity;
+        this.posterPath = posterPath;
+        this.backdropPath = backdropPath;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.video = video;
     }
-
 
     @Override
     public int describeContents() {
@@ -61,31 +93,28 @@ public class MovieItem implements  Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.vote_count);
         dest.writeString(this.id);
-        dest.writeString(this.vote_average);
+        dest.writeString(this.voteAverage);
         dest.writeString(this.title);
         dest.writeString(this.popularity);
-        dest.writeString(this.poster_path);
-        dest.writeString(this.backdrop_path);
+        dest.writeString(this.posterPath);
+        dest.writeString(this.backdropPath);
         dest.writeString(this.overview);
-        dest.writeString(this.release_date);
+        dest.writeString(this.releaseDate);
         dest.writeValue(this.video);
-        dest.writeValue(this.adult);
     }
 
+    @Ignore
     protected MovieItem(Parcel in) {
-        this.vote_count = in.readString();
         this.id = in.readString();
-        this.vote_average = in.readString();
+        this.voteAverage = in.readString();
         this.title = in.readString();
         this.popularity = in.readString();
-        this.poster_path = in.readString();
-        this.backdrop_path = in.readString();
+        this.posterPath = in.readString();
+        this.backdropPath = in.readString();
         this.overview = in.readString();
-        this.release_date = in.readString();
+        this.releaseDate = in.readString();
         this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
     }
 
     public static final Creator<MovieItem> CREATOR = new Creator<MovieItem>() {

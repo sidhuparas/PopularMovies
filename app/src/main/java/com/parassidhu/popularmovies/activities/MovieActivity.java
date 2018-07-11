@@ -43,10 +43,10 @@ public class MovieActivity extends AppCompatActivity {
             MovieItem item = bundle.getParcelable(MainActivity.MOVIE_KEY);
 
             String backdrop = Constants.BASE_BACKDROP + item.getBackdrop_path();
-            String poster = Constants.BASE_IMAGE + item.getPoster_path();
+            String poster = Constants.BASE_IMAGE + item.getPosterPath();
             String title = item.getTitle();
-            String release_date = item.getRelease_date();
-            String vote_average = item.getVote_average();
+            String release_date = item.getReleaseDate();
+            String vote_average = item.getVoteAverage();
             String overview = item.getOverview();
 
             setValuesToViews(backdrop, poster, title, release_date, vote_average, overview);

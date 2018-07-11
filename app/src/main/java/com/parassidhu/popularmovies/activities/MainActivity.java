@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager mLayoutManager;
     private MoviesAdapter adapter;
     private int pageNum;
-    private String latestList;
+    private String latestList;  // Stores user-selected URL, Popular Movies or Top-Rated
 
     private String TAG = getClass().getSimpleName();
     public static final String MOVIE_KEY = "movie_item";

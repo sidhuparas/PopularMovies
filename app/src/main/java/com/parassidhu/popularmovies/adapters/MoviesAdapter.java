@@ -63,12 +63,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         void bind(int position) {
             MovieItem item = moviesItems.get(position);
 
-            String path = Constants.BASE_IMAGE + item.getPoster_path();
+            String path = Constants.BASE_IMAGE + item.getPosterPath();
 
             Picasso.get().load(path)
                     .into(image);
 
-            String release_date = item.getRelease_date();
+            String release_date = item.getReleaseDate();
             title.setText(item.getTitle());
 
             String s_year = getYear(release_date);
