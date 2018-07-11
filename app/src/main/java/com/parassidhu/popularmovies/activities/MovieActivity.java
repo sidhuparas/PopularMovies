@@ -64,10 +64,4 @@ public class MovieActivity extends AppCompatActivity {
         tv_overview.setText(overview);
         tv_fav.setText(vote_average);
     }
-
-    // Helper method
-    private String customGetExtra(String toReturn){
-        Bundle bundle = getIntent().getBundleExtra("Values");
-        return bundle.getString(toReturn);
-    }
 }
