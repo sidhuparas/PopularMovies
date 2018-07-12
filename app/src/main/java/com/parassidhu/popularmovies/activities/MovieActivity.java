@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parassidhu.popularmovies.R;
+import com.parassidhu.popularmovies.database.MovieDatabase;
 import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
 import com.squareup.picasso.Picasso;
