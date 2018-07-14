@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parassidhu.popularmovies.R;
-import com.parassidhu.popularmovies.database.MovieDatabase;
 import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
 import com.squareup.picasso.Picasso;
@@ -43,7 +42,7 @@ public class MovieActivity extends AppCompatActivity {
             Bundle bundle = getIntent().getBundleExtra("Values");
             MovieItem item = bundle.getParcelable(MainActivity.MOVIE_KEY);
 
-            String backdrop = Constants.BASE_BACKDROP + item.getBackdrop_path();
+            String backdrop = Constants.BASE_BACKDROP + item.getBackdropPath();
             String poster = Constants.BASE_IMAGE + item.getPosterPath();
             String title = item.getTitle();
             String release_date = item.getReleaseDate();

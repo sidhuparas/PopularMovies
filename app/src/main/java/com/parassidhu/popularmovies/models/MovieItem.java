@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +14,8 @@ import com.google.gson.annotations.SerializedName;
 public class MovieItem implements  Parcelable{
 
     @PrimaryKey
-    private String id;
+    @NonNull
+    private int id;
 
     @ColumnInfo(name = "vote_average")
     @SerializedName("vote_average")
@@ -39,7 +41,7 @@ public class MovieItem implements  Parcelable{
 
     private Boolean video;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -59,7 +61,7 @@ public class MovieItem implements  Parcelable{
         return posterPath;
     }
 
-    public String getBackdrop_path() {
+    public String getBackdropPath() {
         return backdropPath;
     }
 
@@ -73,7 +75,43 @@ public class MovieItem implements  Parcelable{
 
     public Boolean getVideo() { return video; }
 
-    public MovieItem(String id, String voteAverage, String title, String popularity,
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setVoteAverage(String voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPopularity(String popularity) {
+        this.popularity = popularity;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setVideo(Boolean video) {
+        this.video = video;
+    }
+
+    public MovieItem(int id, String voteAverage, String title, String popularity,
                      String posterPath, String backdropPath, String overview, String releaseDate, Boolean video) {
         this.id = id;
         this.voteAverage = voteAverage;
@@ -93,7 +131,7 @@ public class MovieItem implements  Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
+        dest.writeInt(this.id);
         dest.writeString(this.voteAverage);
         dest.writeString(this.title);
         dest.writeString(this.popularity);
@@ -106,7 +144,7 @@ public class MovieItem implements  Parcelable{
 
     @Ignore
     protected MovieItem(Parcel in) {
-        this.id = in.readString();
+        this.id = in.readInt();
         this.voteAverage = in.readString();
         this.title = in.readString();
         this.popularity = in.readString();

@@ -1,17 +1,19 @@
 package com.parassidhu.popularmovies.activities;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.chip.Chip;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -22,21 +24,24 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.stetho.Stetho;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.parassidhu.popularmovies.BuildConfig;
 import com.parassidhu.popularmovies.R;
 import com.parassidhu.popularmovies.adapters.MoviesAdapter;
+import com.parassidhu.popularmovies.database.MovieDatabase;
 import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
 import com.parassidhu.popularmovies.utils.ItemClickSupport;
 
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private int pageNum;
     private String latestList;  // Stores user-selected URL, Popular Movies or Top-Rated
 
+    private MovieViewModel mViewModel;
+
     private String TAG = getClass().getSimpleName();
     public static final String MOVIE_KEY = "movie_item";
 
@@ -65,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         init();
+        setupViewModel();
         latestList = Constants.POPULAR_LIST;
         fetchMovies(getURL(pageNum));
         popular.setSelected(true);
@@ -72,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Basic setup of views
     private void init() {
+        Stetho.initializeWithDefaults(this);
+
         // Setup RecyclerView
         int spanCount = 2;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -94,6 +104,17 @@ public class MainActivity extends AppCompatActivity {
         setChipListeners();
         setMovieClickListener();
         addListScrollListener();
+    }
+
+    private void setupViewModel(){
+        mViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+
+        mViewModel.getAllMovies().observe(this, new Observer<List<MovieItem>>() {
+            @Override
+            public void onChanged(@Nullable List<MovieItem> movieItems) {
+
+            }
+        });
     }
 
     private void addListScrollListener() {
@@ -171,6 +192,9 @@ public class MainActivity extends AppCompatActivity {
                 // to be passed
                 moviesItems.addAll(items);
 
+                //mViewModel.insertMovies(moviesItems);
+                MovieDatabase mDb = MovieDatabase.getDatabase(this);
+                mDb.movieDao().insertMovies(moviesItems);
                 if (moviesList.getAdapter() == null) {
                     adapter = new MoviesAdapter(MainActivity.this, moviesItems);
                     moviesList.setAdapter(adapter);
@@ -179,7 +203,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 controlViews(false, true);
             }
-        } catch (Exception e) {
+        } catch (JSONException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
             showError();
             controlViews(false, false);
         }
