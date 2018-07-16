@@ -1,6 +1,7 @@
 package com.parassidhu.popularmovies.database;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -20,9 +21,6 @@ public interface MovieDao {
 
     @Delete
     void deleteMovie(MovieItem movie);
-
-    @Update
-    void updateMovie(MovieItem movie);
 
     @Query("SELECT * FROM movies")
     LiveData<List<MovieItem>> getMovies();

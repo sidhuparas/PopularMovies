@@ -9,5 +9,6 @@ public class Constants {
     public static final String TOP_RATED_LIST = BASE_URL + "movie/top_rated";
     public static final String BASE_IMAGE = "http://image.tmdb.org/t/p/w185";
     public static final String BASE_BACKDROP = "http://image.tmdb.org/t/p/w780";
+    public static final String FIRST_TIME_URL = POPULAR_LIST + "?api_key=" + BuildConfig.API_KEY;
 
 }

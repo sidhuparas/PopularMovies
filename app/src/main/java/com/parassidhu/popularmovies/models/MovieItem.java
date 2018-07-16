@@ -11,10 +11,9 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "movies")
-public class MovieItem implements  Parcelable{
+public class MovieItem implements Parcelable{
 
     @PrimaryKey
-    @NonNull
     private int id;
 
     @ColumnInfo(name = "vote_average")
@@ -40,6 +39,9 @@ public class MovieItem implements  Parcelable{
     private String releaseDate;
 
     private Boolean video;
+
+    @ColumnInfo(name = "sort_by")
+    private String sortBy;
 
     public int getId() {
         return id;
@@ -75,41 +77,13 @@ public class MovieItem implements  Parcelable{
 
     public Boolean getVideo() { return video; }
 
+    public String getSortBy() { return sortBy; }
+
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setVoteAverage(String voteAverage) {
-        this.voteAverage = voteAverage;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setPopularity(String popularity) {
-        this.popularity = popularity;
-    }
-
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
-    }
-
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public void setVideo(Boolean video) {
-        this.video = video;
-    }
+    public void setSortBy(String sortBy) { this.sortBy = sortBy; }
 
     public MovieItem(int id, String voteAverage, String title, String popularity,
                      String posterPath, String backdropPath, String overview, String releaseDate, Boolean video) {

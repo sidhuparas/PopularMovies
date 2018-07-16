@@ -36,14 +36,6 @@
         android:id="@+id/chip"
         android:gravity="end">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sort"
-            android:textColor="@color/black"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="5dp"/>
-
         <android.support.design.chip.ChipGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -60,10 +52,15 @@
                 android:text="@string/chip2"
                 android:id="@+id/top_rated"/>
 
+            <android.support.design.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chip3"
+                android:id="@+id/favorites_chip"/>
+
         </android.support.design.chip.ChipGroup>
 
     </LinearLayout>
-
 
     <ProgressBar
         android:id="@+id/progressBar"

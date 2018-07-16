@@ -2,8 +2,11 @@ package com.parassidhu.popularmovies.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,19 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.facebook.stetho.Stetho;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.parassidhu.popularmovies.BuildConfig;
 import com.parassidhu.popularmovies.R;
 import com.parassidhu.popularmovies.adapters.MoviesAdapter;
@@ -36,11 +32,8 @@ import com.parassidhu.popularmovies.utils.Constants;
 import com.parassidhu.popularmovies.utils.ItemClickSupport;
 
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,12 +51,23 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager mLayoutManager;
     private MoviesAdapter adapter;
     private int pageNum;
-    private String latestList;  // Stores user-selected URL, Popular Movies or Top-Rated
+    private String sortBy;  // Stores user-selected URL, Popular Movies or Top-Rated
 
     private MovieViewModel mViewModel;
 
     private String TAG = getClass().getSimpleName();
     public static final String MOVIE_KEY = "movie_item";
+
+    private Comparator<MovieItem> comparator = new Comparator<MovieItem>() {
+        @Override
+        public int compare(MovieItem movieItem, MovieItem t1) {
+            Double d = Double.valueOf(movieItem.getPopularity())
+                    - Double.valueOf(t1.getPopularity());
+            if (d > 0) return -1;
+            else if (d == 0) return 0;
+            else return 1;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         init();
+        sortBy = Constants.POPULAR_LIST;
         setupViewModel();
-        latestList = Constants.POPULAR_LIST;
-        fetchMovies(getURL(pageNum));
+        // mViewModel.fetchMovies(getURL(pageNum));
         popular.setSelected(true);
     }
 
@@ -98,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle("");
 
         // Show progress bar and hide list
-        controlViews(true, false);
+        showProgressBar(true);
 
         //Set Listeners
         setChipListeners();
@@ -106,15 +110,37 @@ public class MainActivity extends AppCompatActivity {
         addListScrollListener();
     }
 
-    private void setupViewModel(){
+    // Handle ViewModel
+    private void setupViewModel() {
         mViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
         mViewModel.getAllMovies().observe(this, new Observer<List<MovieItem>>() {
             @Override
             public void onChanged(@Nullable List<MovieItem> movieItems) {
-
+                if (movieItems!=null) {
+                    Log.d(TAG, "onChanged: " + movieItems.size());
+                    moviesItems.clear();
+                    moviesItems.addAll(movieItems);
+                    if (movieItems != null) {
+                        showInUI(movieItems);
+                    }
+                    showProgressBar(false);
+                }else {
+                    Log.d(TAG, "onChanged: It's null");
+                }
             }
         });
+    }
+
+    private void showInUI(List<MovieItem> movieItems) {
+        Log.d(TAG, "onChanged: Notified: " + movieItems.size());
+        if (moviesList.getAdapter() == null) {
+            adapter = new MoviesAdapter(MainActivity.this, moviesItems);
+            moviesList.setAdapter(adapter);
+        } else {
+            Log.d(TAG, "showInUI: DataSetNotified");
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void addListScrollListener() {
@@ -134,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     if (holderCount + oldCount >= (count - 10)) {
                         // Increments the page number and fetch the result
                         pageNum++;
-                        fetchMovies(getURL(pageNum));
+                        mViewModel.fetchMovies(getURL(pageNum),sortBy);
                     }
                 }
             }
@@ -142,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getURL(int page) {
-        Uri uri = Uri.parse(latestList).buildUpon()
+        Uri uri = Uri.parse(sortBy).buildUpon()
                 .appendQueryParameter("api_key", BuildConfig.API_KEY)
                 .appendQueryParameter("page", String.valueOf(page))
                 .build();
@@ -150,76 +176,16 @@ public class MainActivity extends AppCompatActivity {
         return uri.toString();
     }
 
-    // Fetch JSON from the API
-    private void fetchMovies(String URL) {
-        if (pageNum == 1) {
-            controlViews(true, false);
-        }
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        parseAndShowInUi(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                controlViews(false, false);
-                showError();
-            }
-        });
-
-        stringRequest.setShouldCache(false);
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
-
-    // Parse the response and show to the main user interface
-    private void parseAndShowInUi(String response) {
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            JSONArray jsonArray = jsonObject.optJSONArray("results");
-
-            if (jsonArray.length() > 0) {
-                Gson gson = new Gson();
-
-                // Creates a new ArrayList of fetched result
-                ArrayList<MovieItem> items = gson.fromJson(jsonArray.toString(),
-                        new TypeToken<ArrayList<MovieItem>>() {}.getType());
-
-                // Adds the above ArrayList to main ArrayList which is
-                // to be passed
-                moviesItems.addAll(items);
-
-                //mViewModel.insertMovies(moviesItems);
-                MovieDatabase mDb = MovieDatabase.getDatabase(this);
-                mDb.movieDao().insertMovies(moviesItems);
-                if (moviesList.getAdapter() == null) {
-                    adapter = new MoviesAdapter(MainActivity.this, moviesItems);
-                    moviesList.setAdapter(adapter);
-                } else {
-                    adapter.notifyDataSetChanged();
-                }
-                controlViews(false, true);
-            }
-        } catch (JSONException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            showError();
-            controlViews(false, false);
-        }
-    }
-
     private void showError() {
         Toast.makeText(MainActivity.this,
                 "Please retry after some time!", Toast.LENGTH_SHORT).show();
     }
 
-    // private boolean isOnline(){
-    //     ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-    //     NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-    //     return networkInfo!=null && networkInfo.isConnected();
-    // }
+    private boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
 
     // Sets listener for individual movie click
     private void setMovieClickListener() {
@@ -249,10 +215,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 controlChip(true, false);
-                latestList = Constants.POPULAR_LIST;
-                moviesItems.clear();
-                pageNum = 1;
-                fetchMovies(getURL(pageNum));
+                sortBy = Constants.POPULAR_LIST;
+                reset();
+                mViewModel.fetchMovies(getURL(pageNum), sortBy);
             }
         });
 
@@ -260,26 +225,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 controlChip(false, true);
-                latestList = Constants.TOP_RATED_LIST;
-                moviesItems.clear();
-                pageNum = 1;
-                fetchMovies(getURL(pageNum));
+                sortBy = Constants.TOP_RATED_LIST;
+                reset();
+                mViewModel.fetchMovies(getURL(pageNum), sortBy);
             }
         });
     }
 
+    // Executes when user switches between Pop,Top_Rated or Favs
+    private void reset(){
+        moviesItems.clear();
+        pageNum = 1;
+        moviesList.setAdapter(null);
+        showProgressBar(true);
+    }
+
     // Helper method
-    private void controlViews(boolean progress, boolean list) {
+    private void showProgressBar(boolean progress) {
         if (progress) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
             progressBar.setVisibility(View.GONE);
-        }
-
-        if (list) {
-            moviesList.setVisibility(View.VISIBLE);
-        } else {
-            moviesList.setVisibility(View.GONE);
         }
     }
 
