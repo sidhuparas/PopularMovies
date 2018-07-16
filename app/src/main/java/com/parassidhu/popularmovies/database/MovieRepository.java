@@ -1,14 +1,13 @@
 package com.parassidhu.popularmovies.database;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,10 +16,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.parassidhu.popularmovies.activities.MainActivity;
-import com.parassidhu.popularmovies.activities.MovieViewModel;
-import com.parassidhu.popularmovies.adapters.MoviesAdapter;
 import com.parassidhu.popularmovies.models.MovieItem;
+import com.parassidhu.popularmovies.utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +31,11 @@ public class MovieRepository {
     private MovieDao movieDao;
     private LiveData<List<MovieItem>> allMovies;
     private Application application;
+    private String TAG = this.getClass().getSimpleName();
+    private ArrayList<MovieItem> moviesItems = new ArrayList<>();
+
+    private String recentSortBy = Constants.POPULAR_LIST;
+    private MutableLiveData<List<MovieItem>> result = new MutableLiveData<>();
 
     public MovieRepository(Application application){
         MovieDatabase db = MovieDatabase.getDatabase(application);
@@ -61,5 +63,67 @@ public class MovieRepository {
             mAsyncTaskDao.insertMovies(params[0]);
             return null;
         }
+    }
+
+    // Fetch JSON from the API
+    public MutableLiveData<List<MovieItem>> fetchMovies(String URL, final String sortBy) {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        result.setValue(parseAndShowInUi(response, sortBy));
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) { }
+        });
+
+        stringRequest.setShouldCache(false);
+        RequestQueue requestQueue = Volley.newRequestQueue(application.getApplicationContext());
+        requestQueue.add(stringRequest);
+
+        return result;
+    }
+
+    // Parse the response and show to the main user interface
+    private List<MovieItem> parseAndShowInUi(String response, String sortBy) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.optJSONArray("results");
+
+            if (jsonArray.length() > 0) {
+                Gson gson = new Gson();
+
+                // Creates a new ArrayList of fetched result
+                ArrayList<MovieItem> items = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    MovieItem item = gson.fromJson(jsonArray.optJSONObject(i).toString(),
+                            MovieItem.class);
+                    //item.setSortBy(sortBy);
+                    items.add(item);
+                }
+                // Adds the above ArrayList to main ArrayList which is
+                // to be passed
+
+                if (!recentSortBy.equals(sortBy)) {
+                    moviesItems.clear();
+                    recentSortBy = sortBy;
+                }
+
+                moviesItems.addAll(items);
+
+                //insertMovies(moviesItems);
+                Log.d(TAG, "loadFromNetwork: Done");
+                return moviesItems;
+
+            }
+        } catch (JSONException e) { return null;}
+        return null;
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }

@@ -79,7 +79,13 @@ public class MainActivity extends AppCompatActivity {
         sortBy = Constants.POPULAR_LIST;
         setupViewModel();
         // mViewModel.fetchMovies(getURL(pageNum));
-        popular.setSelected(true);
+        if (savedInstanceState==null) {
+            popular.setSelected(true);
+        }else {
+            String selectedChip = savedInstanceState.getString(MOVIE_KEY);
+            if (selectedChip.equals(Constants.POPULAR_LIST)) controlChip(true,false);
+            else if (selectedChip.equals(Constants.TOP_RATED_LIST)) controlChip(false,true);
+        }
     }
 
     // Basic setup of views
@@ -264,4 +270,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (popular.isSelected()) outState.putString(MOVIE_KEY, Constants.POPULAR_LIST);
+        else if (top_rated.isSelected()) outState.putString(MOVIE_KEY, Constants.TOP_RATED_LIST);
+        else ;
+    }
 }
