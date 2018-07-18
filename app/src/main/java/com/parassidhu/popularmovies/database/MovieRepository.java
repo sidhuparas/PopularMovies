@@ -2,6 +2,7 @@ package com.parassidhu.popularmovies.database;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -16,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.parassidhu.popularmovies.models.FavoriteMovie;
 import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
 
@@ -46,6 +48,8 @@ public class MovieRepository {
 
     public LiveData<List<MovieItem>> getAllMovies() { return allMovies; }
 
+    public void insertFavMovie(FavoriteMovie movie) { new insertFavAsync(movieDao).execute(movie); }
+
     public void insertMovies(List<MovieItem> movies) { new insertAsyncTask(movieDao).execute(movies); }
 
     public MovieItem getMovieById(int id) { return movieDao.getMovieById(id); }
@@ -65,6 +69,21 @@ public class MovieRepository {
         }
     }
 
+    private static class insertFavAsync extends AsyncTask<FavoriteMovie, Void, Void> {
+
+        private MovieDao mAsyncTaskDao;
+
+        insertFavAsync(MovieDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final FavoriteMovie... params) {
+            mAsyncTaskDao.insertFavoriteMovie(params[0]);
+            return null;
+        }
+    }
+
     // Fetch JSON from the API
     public MutableLiveData<List<MovieItem>> fetchMovies(String URL, final String sortBy) {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
@@ -75,7 +94,11 @@ public class MovieRepository {
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) { }
+            public void onErrorResponse(VolleyError error) {
+                //result.setValue(movieDao.getMovies().getValue());
+                result.setValue(new ArrayList<MovieItem>());
+                Log.d(TAG, "onErrorResponse: Failed");
+            }
         });
 
         stringRequest.setShouldCache(false);
@@ -112,13 +135,21 @@ public class MovieRepository {
 
                 moviesItems.addAll(items);
 
-                //insertMovies(moviesItems);
+                insertMovies(moviesItems);
                 Log.d(TAG, "loadFromNetwork: Done");
                 return moviesItems;
 
             }
         } catch (JSONException e) { return null;}
         return null;
+    }
+
+    public LiveData<List<FavoriteMovie>> getFavoriteMovies(){
+        return movieDao.getFavoriteMovies();
+    }
+
+    public List<MovieItem> getListOfMovies(){
+        return movieDao.getListOfMovies();
     }
 
     public boolean isOnline() {

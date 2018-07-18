@@ -1,5 +1,6 @@
 package com.parassidhu.popularmovies.adapters;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.parassidhu.popularmovies.R;
+import com.parassidhu.popularmovies.activities.MainActivity;
+import com.parassidhu.popularmovies.database.MovieRepository;
 import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
 import com.squareup.picasso.Picasso;
@@ -60,7 +64,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ButterKnife.bind(this, view);
         }
 
-        void bind(int position) {
+        void bind(final int position) {
             MovieItem item = moviesItems.get(position);
 
             String path = Constants.BASE_IMAGE + item.getPosterPath();

@@ -8,4 +8,6 @@
     <string name="sort">Sort by:</string>
 
     <string name="img_trans">image_transition</string>
+    <string name="internet_retry">Internet is not accessible right now. Try again later</string>
+    <string name="retry">Retry</string>
 </resources>

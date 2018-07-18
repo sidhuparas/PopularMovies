@@ -41,12 +41,6 @@
                 android:paddingTop="10dp"
                 android:textColor="@color/black" />
 
-            <com.github.ivbaranov.mfb.MaterialFavoriteButton
-                android:id="@+id/favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true" />
-
             <TextView
                 android:id="@+id/year"
                 android:layout_width="wrap_content"

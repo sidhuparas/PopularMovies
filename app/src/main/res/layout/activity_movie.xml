@@ -44,6 +44,14 @@
             style="@style/Base.TextAppearance.AppCompat.Title"
             tools:text="Title Here"/>
 
+        <com.github.ivbaranov.mfb.MaterialFavoriteButton
+            android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/backdrop"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"/>
+
         <TextView
             android:id="@+id/releaseDate"
             android:layout_width="wrap_content"

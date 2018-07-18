@@ -2,17 +2,12 @@ package com.parassidhu.popularmovies.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "movies")
-public class MovieItem implements Parcelable{
-
+@Entity(tableName = "favorites")
+public class FavoriteMovie {
     @PrimaryKey
     private int id;
 
@@ -85,7 +80,7 @@ public class MovieItem implements Parcelable{
 
     public void setSortBy(String sortBy) { this.sortBy = sortBy; }
 
-    public MovieItem(int id, String voteAverage, String title, String popularity,
+    public FavoriteMovie(int id, String voteAverage, String title, String popularity,
                      String posterPath, String backdropPath, String overview, String releaseDate, Boolean video) {
         this.id = id;
         this.voteAverage = voteAverage;
@@ -96,53 +91,5 @@ public class MovieItem implements Parcelable{
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.video = video;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeString(this.voteAverage);
-        dest.writeString(this.title);
-        dest.writeString(this.popularity);
-        dest.writeString(this.posterPath);
-        dest.writeString(this.backdropPath);
-        dest.writeString(this.overview);
-        dest.writeString(this.releaseDate);
-        dest.writeValue(this.video);
-    }
-
-    @Ignore
-    protected MovieItem(Parcel in) {
-        this.id = in.readInt();
-        this.voteAverage = in.readString();
-        this.title = in.readString();
-        this.popularity = in.readString();
-        this.posterPath = in.readString();
-        this.backdropPath = in.readString();
-        this.overview = in.readString();
-        this.releaseDate = in.readString();
-        this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());
-    }
-
-    public static final Creator<MovieItem> CREATOR = new Creator<MovieItem>() {
-        @Override
-        public MovieItem createFromParcel(Parcel source) {
-            return new MovieItem(source);
-        }
-
-        @Override
-        public MovieItem[] newArray(int size) {
-            return new MovieItem[size];
-        }
-    };
-
-    @Override
-    public boolean equals(Object obj) {
-        return (this.getId() == ((MovieItem)obj).getId());
     }
 }

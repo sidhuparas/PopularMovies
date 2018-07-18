@@ -5,9 +5,10 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import com.parassidhu.popularmovies.models.FavoriteMovie;
 import com.parassidhu.popularmovies.models.MovieItem;
 
-@Database(entities = MovieItem.class, version = 1)
+@Database(entities = {MovieItem.class, FavoriteMovie.class}, version = 1, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
 
     public abstract MovieDao movieDao();
