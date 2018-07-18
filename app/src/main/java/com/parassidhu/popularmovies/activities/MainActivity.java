@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         mViewModel = ViewModelProviders.of(this, new MovieViewModelFactory
                 (this.getApplication())).get(MovieViewModel.class);
 
-        //mViewModel.getFavoriteMovies().removeObserver(favoriteMoviesObserver);
         if (!isFavoritesSelected()) {
             mViewModel.getAllMovies().observe(this, allMoviesObserver);
         }
@@ -186,12 +185,15 @@ public class MainActivity extends AppCompatActivity {
     Observer<List<FavoriteMovie>> favoriteMoviesObserver = new Observer<List<FavoriteMovie>>() {
         @Override
         public void onChanged(@Nullable List<FavoriteMovie> favoriteMovies) {
-            Gson gson = new Gson();
-            String json = gson.toJson(favoriteMovies);
-            List<MovieItem> list = gson.fromJson(json, new TypeToken<List<MovieItem>>() {
-            }.getType());
-            moviesItems.clear();
-            setValuesToAdapter(list);
+          if (isFavoritesSelected()) {
+              Gson gson = new Gson();
+              String json = gson.toJson(favoriteMovies);
+              List<MovieItem> list = gson.fromJson(json, new TypeToken<List<MovieItem>>() {
+              }.getType());
+              moviesItems.clear();
+              setValuesToAdapter(list);
+              Log.d(TAG, "Retrieved Favorites");
+          }
         }
     };
 
@@ -357,12 +359,12 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.retry_btn)
     public void retry() {
-        //mViewModel.getAllMovies();
         layout.setVisibility(View.GONE);
         showProgressBar(true);
         mViewModel.fetchMovies(getURL(pageNum), sortBy);
     }
 
+    // After configuration changes, select a chip
     private void determineChipToSelect(Bundle savedInstanceState) {
         String selectedChip = savedInstanceState.getString(MOVIE_KEY, Constants.POPULAR_LIST);
 

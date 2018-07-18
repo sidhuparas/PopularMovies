@@ -50,9 +50,11 @@ public class MovieRepository {
 
     public void insertFavMovie(FavoriteMovie movie) { new insertFavAsync(movieDao).execute(movie); }
 
+    public void deleteFavMovie(FavoriteMovie movie) { new deleteFavAsync(movieDao).execute(movie); }
+
     public void insertMovies(List<MovieItem> movies) { new insertAsyncTask(movieDao).execute(movies); }
 
-    public MovieItem getMovieById(int id) { return movieDao.getMovieById(id); }
+    public LiveData<Integer> isFavorite(int id) { return movieDao.isFavorite(id); }
 
     private static class insertAsyncTask extends AsyncTask<List<MovieItem>, Void, Void> {
 
@@ -69,7 +71,7 @@ public class MovieRepository {
         }
     }
 
-    private static class insertFavAsync extends AsyncTask<FavoriteMovie, Void, Void> {
+       private static class insertFavAsync extends AsyncTask<FavoriteMovie, Void, Void> {
 
         private MovieDao mAsyncTaskDao;
 
@@ -80,6 +82,21 @@ public class MovieRepository {
         @Override
         protected Void doInBackground(final FavoriteMovie... params) {
             mAsyncTaskDao.insertFavoriteMovie(params[0]);
+            return null;
+        }
+    }
+
+    private static class deleteFavAsync extends AsyncTask<FavoriteMovie, Void, Void> {
+
+        private MovieDao mAsyncTaskDao;
+
+        deleteFavAsync(MovieDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final FavoriteMovie... params) {
+            mAsyncTaskDao.deleteFavoriteMovie(params[0]);
             return null;
         }
     }
@@ -148,9 +165,6 @@ public class MovieRepository {
         return movieDao.getFavoriteMovies();
     }
 
-    public List<MovieItem> getListOfMovies(){
-        return movieDao.getListOfMovies();
-    }
 
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);

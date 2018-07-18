@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/backdrop"
             android:layout_toRightOf="@id/poster"
+            android:layout_toLeftOf="@id/favorite"
             android:layout_margin="16dp"
             android:textColor="@color/black"
             style="@style/Base.TextAppearance.AppCompat.Title"

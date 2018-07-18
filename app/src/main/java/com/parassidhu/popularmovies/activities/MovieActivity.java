@@ -1,6 +1,8 @@
 package com.parassidhu.popularmovies.activities;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -44,7 +46,6 @@ public class MovieActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getValuesFromIntent();
-        setupFavorite();
         setupViewModel();
     }
 
@@ -52,28 +53,29 @@ public class MovieActivity extends AppCompatActivity {
         mViewModel = ViewModelProviders.of(this, new MovieViewModelFactory
                 (this.getApplication())).get(MovieViewModel.class);
 
-       /* mViewModel.getFavoriteMovies().observe(this, new Observer<List<FavoriteMovie>>() {
+        mViewModel.isFavorite(movieItem.getId()).observe(this, new Observer<Integer>() {
             @Override
-            public void onChanged(@Nullable List<FavoriteMovie> favoriteMovies) {
+            public void onChanged(@Nullable Integer integer) {
+                if (integer==1){ favoriteButton.setFavorite(true,false); }
+                else favoriteButton.setFavorite(false, false);
 
+                setupFavorite();
             }
-        });*/
+        });
     }
 
     // Gets values from Intent and pass to setValuesToViews method
     private void getValuesFromIntent() {
         if (getIntent().hasExtra("Values")){
             Bundle bundle = getIntent().getBundleExtra("Values");
-            MovieItem item = bundle.getParcelable(MainActivity.MOVIE_KEY);
+            movieItem = bundle.getParcelable(MainActivity.MOVIE_KEY);
 
-            String backdrop = Constants.BASE_BACKDROP + item.getBackdropPath();
-            String poster = Constants.BASE_IMAGE + item.getPosterPath();
-            String title = item.getTitle();
-            String release_date = item.getReleaseDate();
-            String vote_average = item.getVoteAverage();
-            String overview = item.getOverview();
-
-            movieItem = item;
+            String backdrop = Constants.BASE_BACKDROP + movieItem.getBackdropPath();
+            String poster = Constants.BASE_IMAGE + movieItem.getPosterPath();
+            String title = movieItem.getTitle();
+            String release_date = movieItem.getReleaseDate();
+            String vote_average = movieItem.getVoteAverage();
+            String overview = movieItem.getOverview();
 
             setValuesToViews(backdrop, poster, title, release_date, vote_average, overview);
         }
@@ -96,13 +98,17 @@ public class MovieActivity extends AppCompatActivity {
             @Override
             public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite) {
                 if (favorite){
-                    Gson gson = new Gson();
-                    String json = gson.toJson(movieItem);
-                    FavoriteMovie favoriteMovie = gson.fromJson(json, FavoriteMovie.class);
-
-                    mViewModel.insertFavMovie(favoriteMovie);
+                    mViewModel.insertFavMovie(convertToFavorite());
+                }else {
+                    mViewModel.deleteFavMovie(convertToFavorite());
                 }
             }
         });
+    }
+
+    private FavoriteMovie convertToFavorite() {
+        Gson gson = new Gson();
+        String json = gson.toJson(movieItem);
+        return gson.fromJson(json, FavoriteMovie.class);
     }
 }

@@ -15,24 +15,27 @@ import java.util.List;
 @Dao
 public interface MovieDao {
 
+    // Movies Table
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovies(List<MovieItem> movie);
-
-    @Delete
-    void deleteMovie(MovieItem movie);
 
     @Query("SELECT * FROM movies")
     LiveData<List<MovieItem>> getMovies();
 
-    @Query("SELECT * FROM favorites")
-    List<MovieItem> getListOfMovies();
+
+    // FavoritesTable
 
     @Query("SELECT * FROM favorites")
     LiveData<List<FavoriteMovie>> getFavoriteMovies();
 
-    @Insert
+    @Query("SELECT COUNT(id) FROM favorites WHERE id = :id")
+    LiveData<Integer> isFavorite(int id);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertFavoriteMovie(FavoriteMovie movie);
 
-    @Query("SELECT * FROM movies WHERE id=:id")
-    MovieItem getMovieById(int id);
+    @Delete
+    void deleteFavoriteMovie(FavoriteMovie movie);
+
 }
