@@ -70,6 +70,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             String path = Constants.BASE_IMAGE + item.getPosterPath();
 
             Picasso.get().load(path)
+                    .placeholder(R.drawable.img_loading_portrait)
                     .into(image);
 
             String release_date = item.getReleaseDate();

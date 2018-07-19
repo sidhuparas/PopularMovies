@@ -84,8 +84,12 @@ public class MovieActivity extends AppCompatActivity {
     // Shows the values in main UI
     private void setValuesToViews(String backdrop, String poster, String title, String release_date,
                                   String vote_average, String overview) {
-        Picasso.get().load(backdrop).into(iv_backdrop);
-        Picasso.get().load(poster).into(iv_poster);
+        Picasso.get().load(backdrop)
+                .placeholder(R.drawable.img_loading_cover)
+                .error(R.drawable.img_loading_error)
+                .into(iv_backdrop);
+
+        Picasso.get().load(poster).placeholder(R.drawable.img_loading_portrait).into(iv_poster);
 
         tv_title.setText(title);
         tv_release_date.setText(release_date);

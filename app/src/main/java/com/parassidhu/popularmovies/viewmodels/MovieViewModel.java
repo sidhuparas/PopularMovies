@@ -22,7 +22,6 @@ public class MovieViewModel extends AndroidViewModel {
     private MovieDatabase mDb;
     private String TAG = getClass().getSimpleName();
     private Application application;
-    private LiveData<List<FavoriteMovie>> favMovies = new MutableLiveData<>();
 
     private String recentSortBy = Constants.POPULAR_LIST;
 
@@ -32,6 +31,10 @@ public class MovieViewModel extends AndroidViewModel {
         mDb = MovieDatabase.getDatabase(application);
         this.application = application;
 
+        decideNetworkRequestOrExisting();
+    }
+
+    public void decideNetworkRequestOrExisting() {
         if (mRepository.isOnline()) {
             fetchMovies(Constants.FIRST_TIME_URL, recentSortBy);
         } else {
@@ -41,7 +44,12 @@ public class MovieViewModel extends AndroidViewModel {
 
     public LiveData<List<MovieItem>> getAllMovies() {
         Log.d(TAG, "getAllMovies: Added");
+        //decideNetworkRequestOrExisting();
         return allMovies;
+    }
+
+    public LiveData<List<MovieItem>> getOfflineMovies(){
+        return mRepository.getAllMovies();
     }
 
     public void fetchMovies(String URL, String sortBy) {

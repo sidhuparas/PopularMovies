@@ -28,40 +28,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:padding="5dp"
-        android:id="@+id/chip"
-        android:gravity="end">
-
-        <android.support.design.chip.ChipGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <android.support.design.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/chip1"
-                android:id="@+id/popular"/>
-
-            <android.support.design.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/chip2"
-                android:id="@+id/top_rated"/>
-
-            <android.support.design.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/chip3"
-                android:id="@+id/favorites_chip"/>
-
-        </android.support.design.chip.ChipGroup>
-
-    </LinearLayout>
-
     <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -113,8 +79,43 @@
         android:id="@+id/moviesList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/chip"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/chip"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+        android:id="@+id/chip"
+        android:gravity="center">
+
+        <android.support.design.chip.ChipGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <android.support.design.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chip1"
+                android:id="@+id/popular"/>
+
+            <android.support.design.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chip2"
+                android:id="@+id/top_rated"/>
+
+            <android.support.design.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chip3"
+                android:id="@+id/favorites_chip"/>
+
+        </android.support.design.chip.ChipGroup>
+
+    </LinearLayout>
 
 </RelativeLayout>

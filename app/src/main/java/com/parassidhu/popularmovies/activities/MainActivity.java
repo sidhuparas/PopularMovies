@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager mLayoutManager;
     private MoviesAdapter adapter;
     private int pageNum;
-    private String sortBy;  // Stores user-selected URL, Popular Movies or Top-Rated
+    private static String sortBy = Constants.POPULAR_LIST;  // Stores user-selected URL, Popular Movies or Top-Rated
 
     private MovieViewModel mViewModel;
 
@@ -97,14 +97,14 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         init();
-        sortBy = Constants.POPULAR_LIST;
-        setupViewModel();
 
         if (savedInstanceState == null) {
             popular.setSelected(true);
         } else {
             determineChipToSelect(savedInstanceState);
         }
+
+        setupViewModel();
     }
 
     // Basic setup of views
@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
     Observer<List<MovieItem>> allMoviesObserver = new Observer<List<MovieItem>>() {
         @Override
         public void onChanged(@Nullable List<MovieItem> movieItems) {
+            Log.d(TAG, "onChanged: " + movieItems.size());
             if (movieItems != null) {
                 if (movieItems.size() != 0) {
                     moviesItems.clear();
@@ -179,6 +180,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getFavs() {
+        mViewModel = ViewModelProviders.of(this, new MovieViewModelFactory
+                (this.getApplication())).get(MovieViewModel.class);
+
         mViewModel.getFavoriteMovies().observe(this, favoriteMoviesObserver);
     }
 
@@ -313,12 +317,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void newChipClick() {
         if (isOnline()) {
+            setupViewModel();
             mViewModel.fetchMovies(getURL(pageNum), sortBy);
         } else {
+           mViewModel.getAllMovies().removeObserver(allMoviesObserver);
             setupViewModel();
+            //mViewModel.decideNetworkRequestOrExisting();
             showProgressBar(false);
         }
-    }
+       }
 
     // Executes when user switches between Pop,Top_Rated or Favs
     private void reset() {

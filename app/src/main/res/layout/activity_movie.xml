@@ -30,7 +30,8 @@
             android:layout_height="200dp"
             android:layout_marginTop="100dp"
             android:src="@color/black"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="20dp"
+            android:elevation="5dp"
             android:transitionName="@string/img_trans"/>
 
         <TextView
