@@ -42,11 +42,13 @@ public class MovieRepository {
     public MovieRepository(Application application){
         MovieDatabase db = MovieDatabase.getDatabase(application);
         movieDao = db.movieDao();
-        allMovies = movieDao.getMovies();
+        allMovies = movieDao.getMovies(recentSortBy);
         this.application = application;
     }
 
-    public LiveData<List<MovieItem>> getAllMovies() { return allMovies; }
+    public LiveData<List<MovieItem>> getAllMovies(String sort_by) {
+        return movieDao.getMovies(sort_by);
+    }
 
     public void insertFavMovie(FavoriteMovie movie) { new insertFavAsync(movieDao).execute(movie); }
 
@@ -66,7 +68,9 @@ public class MovieRepository {
 
         @Override
         protected Void doInBackground(final List<MovieItem>... params) {
-            mAsyncTaskDao.insertMovies(params[0]);
+            try {
+                mAsyncTaskDao.insertMovies(params[0]);
+            }catch (Exception e){}
             return null;
         }
     }
@@ -139,7 +143,7 @@ public class MovieRepository {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     MovieItem item = gson.fromJson(jsonArray.optJSONObject(i).toString(),
                             MovieItem.class);
-                    //item.setSortBy(sortBy);
+                    item.setSortBy(sortBy);
                     items.add(item);
                 }
                 // Adds the above ArrayList to main ArrayList which is

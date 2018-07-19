@@ -20,8 +20,8 @@ public interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovies(List<MovieItem> movie);
 
-    @Query("SELECT * FROM movies")
-    LiveData<List<MovieItem>> getMovies();
+    @Query("SELECT * FROM movies WHERE sort_by = :sort_by")
+    LiveData<List<MovieItem>> getMovies(String sort_by);
 
 
     // FavoritesTable

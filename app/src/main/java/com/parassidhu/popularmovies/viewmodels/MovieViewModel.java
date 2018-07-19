@@ -31,30 +31,33 @@ public class MovieViewModel extends AndroidViewModel {
         mDb = MovieDatabase.getDatabase(application);
         this.application = application;
 
-        decideNetworkRequestOrExisting();
+        decideNetworkRequestOrExisting(Constants.FIRST_TIME_URL);
     }
 
-    public void decideNetworkRequestOrExisting() {
+    private LiveData<List<MovieItem>> decideNetworkRequestOrExisting(String URL) {
         if (mRepository.isOnline()) {
-            fetchMovies(Constants.FIRST_TIME_URL, recentSortBy);
+            allMovies = new MutableLiveData<>();
+            return fetchMovies(URL, recentSortBy);
         } else {
-            allMovies = mRepository.getAllMovies();
+            return getOfflineMovies();
         }
     }
 
-    public LiveData<List<MovieItem>> getAllMovies() {
-        Log.d(TAG, "getAllMovies: Added");
-        //decideNetworkRequestOrExisting();
-        return allMovies;
+    public LiveData<List<MovieItem>> getAllMovies(String URL, String sort_by) {
+        recentSortBy = sort_by;
+        return decideNetworkRequestOrExisting(URL);
     }
 
-    public LiveData<List<MovieItem>> getOfflineMovies(){
-        return mRepository.getAllMovies();
+    private LiveData<List<MovieItem>> getOfflineMovies(){
+        return mRepository.getAllMovies(recentSortBy);
     }
 
-    public void fetchMovies(String URL, String sortBy) {
+    public LiveData<List<MovieItem>> fetchMovies(String URL, String sortBy) {
         recentSortBy = sortBy;
-        allMovies = mRepository.fetchMovies(URL, sortBy);
+
+        MutableLiveData<List<MovieItem>> list = mRepository.fetchMovies(URL, sortBy);
+        allMovies = list;
+        return list;
     }
 
     public void insertFavMovie(FavoriteMovie movie) {

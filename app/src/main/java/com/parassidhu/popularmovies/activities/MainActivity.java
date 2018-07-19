@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.google.gson.Gson;
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 (this.getApplication())).get(MovieViewModel.class);
 
         if (!isFavoritesSelected()) {
-            mViewModel.getAllMovies().observe(this, allMoviesObserver);
+            mViewModel.getAllMovies(getURL(pageNum), sortBy).observe(this, allMoviesObserver);
         }
     }
 
@@ -161,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     Map<Integer, MovieItem> map = removeDuplicateValues(movieItems);
 
                     setValuesToAdapter(map.values());
+                    layout.setVisibility(View.GONE);
                 } else {
                     showProgressBar(false);
                     layout.setVisibility(View.VISIBLE);
@@ -197,6 +199,11 @@ public class MainActivity extends AppCompatActivity {
               moviesItems.clear();
               setValuesToAdapter(list);
               Log.d(TAG, "Retrieved Favorites");
+
+              if (moviesItems.size()==0){
+                  Toast.makeText(MainActivity.this, "No Favorites Found!"
+                          , Toast.LENGTH_LONG).show();
+              }
           }
         }
     };
@@ -318,9 +325,9 @@ public class MainActivity extends AppCompatActivity {
     private void newChipClick() {
         if (isOnline()) {
             setupViewModel();
-            mViewModel.fetchMovies(getURL(pageNum), sortBy);
+            mViewModel.getAllMovies(getURL(pageNum), sortBy);
         } else {
-           mViewModel.getAllMovies().removeObserver(allMoviesObserver);
+           mViewModel.getAllMovies(getURL(pageNum), sortBy).removeObserver(allMoviesObserver);
             setupViewModel();
             //mViewModel.decideNetworkRequestOrExisting();
             showProgressBar(false);
@@ -368,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
     public void retry() {
         layout.setVisibility(View.GONE);
         showProgressBar(true);
-        mViewModel.fetchMovies(getURL(pageNum), sortBy);
+        mViewModel.getAllMovies(getURL(pageNum), sortBy);
     }
 
     // After configuration changes, select a chip

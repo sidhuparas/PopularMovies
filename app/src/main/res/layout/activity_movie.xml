@@ -42,6 +42,8 @@
             android:layout_toRightOf="@id/poster"
             android:layout_toLeftOf="@id/favorite"
             android:layout_margin="16dp"
+            android:maxLines="3"
+            android:ellipsize="end"
             android:textColor="@color/black"
             style="@style/Base.TextAppearance.AppCompat.Title"
             tools:text="Title Here"/>
@@ -52,7 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/backdrop"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"/>
+            android:layout_marginRight="16dp"
+            />
 
         <TextView
             android:id="@+id/releaseDate"
