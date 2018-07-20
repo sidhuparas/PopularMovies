@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingRight="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+   <ImageView
+       android:layout_width="300dp"
+       android:layout_height="200dp"
+       android:id="@+id/image"
+       tools:src="@drawable/img_loading_portrait"
+       android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:src="@drawable/img_yt_logo"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"/>
+
+</FrameLayout>

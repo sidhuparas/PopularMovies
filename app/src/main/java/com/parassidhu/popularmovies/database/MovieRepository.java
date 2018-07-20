@@ -23,6 +23,7 @@ import com.parassidhu.popularmovies.BuildConfig;
 import com.parassidhu.popularmovies.models.CastItem;
 import com.parassidhu.popularmovies.models.FavoriteMovie;
 import com.parassidhu.popularmovies.models.MovieItem;
+import com.parassidhu.popularmovies.models.TrailerItem;
 import com.parassidhu.popularmovies.utils.Constants;
 
 import org.json.JSONArray;
@@ -191,20 +192,51 @@ public class MovieRepository {
                     JSONObject obj = new JSONObject(response);
                     JSONArray jsonArray = obj.optJSONArray("cast");
 
-                    Gson gson = new Gson();
-                    List<CastItem> list = gson.fromJson(jsonArray.toString(),
-                            new TypeToken<List<CastItem>>(){}.getType());
+                    if (jsonArray.length()>0) {
+                        Gson gson = new Gson();
+                        List<CastItem> list = gson.fromJson(jsonArray.toString(),
+                                new TypeToken<List<CastItem>>() {
+                                }.getType());
 
-                    result.setValue(list);
-                }catch (Exception e){
-
-                }
+                        result.setValue(list);
+                    }
+                }catch (Exception e){ }
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(VolleyError error) { }
+        });
 
+        RequestQueue requestQueue = Volley.newRequestQueue(application);
+        requestQueue.add(stringRequest);
+
+        return result;
+    }
+
+    public LiveData<List<TrailerItem>> getTrailers(String id){
+        final MutableLiveData<List<TrailerItem>> result = new MutableLiveData<>();
+        String URL = "http://api.themoviedb.org/3/movie/" + id + "/trailers?api_key=" + BuildConfig.API_KEY;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    JSONArray jsonArray = obj.optJSONArray("youtube");
+
+                    if (jsonArray.length()>0) {
+                        Gson gson = new Gson();
+                        List<TrailerItem> list = gson.fromJson(jsonArray.toString(),
+                                new TypeToken<List<TrailerItem>>() {
+                                }.getType());
+
+                        result.setValue(list);
+                    }
+                }catch (Exception ignored){ }
             }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) { }
         });
 
         RequestQueue requestQueue = Volley.newRequestQueue(application);

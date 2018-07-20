@@ -2,7 +2,9 @@ package com.parassidhu.popularmovies.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +25,9 @@ import com.parassidhu.popularmovies.adapters.TrailerAdapter;
 import com.parassidhu.popularmovies.models.CastItem;
 import com.parassidhu.popularmovies.models.FavoriteMovie;
 import com.parassidhu.popularmovies.models.MovieItem;
+import com.parassidhu.popularmovies.models.TrailerItem;
 import com.parassidhu.popularmovies.utils.Constants;
+import com.parassidhu.popularmovies.utils.ItemClickSupport;
 import com.parassidhu.popularmovies.viewmodels.MovieDetailViewModel;
 import com.parassidhu.popularmovies.viewmodels.MovieDetailViewModelFactory;
 import com.parassidhu.popularmovies.viewmodels.MovieViewModel;
@@ -46,6 +51,7 @@ public class MovieActivity extends AppCompatActivity {
     @BindView(R.id.favorite) MaterialFavoriteButton favoriteButton;
 
     @BindView(R.id.castRcl) RecyclerView castRcl;
+    @BindView(R.id.trailerRcl) RecyclerView trailerRcl;
 
     private MovieDetailViewModel mViewModel;
     private MovieItem movieItem;
@@ -71,9 +77,17 @@ public class MovieActivity extends AppCompatActivity {
 
     private void setAdapters() {
         cAdapter = new CastAdapter(this);
+        tAdapter = new TrailerAdapter(this);
+
         castRcl.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL,false));
+                LinearLayoutManager.HORIZONTAL, false));
         castRcl.setAdapter(cAdapter);
+
+        trailerRcl.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false));
+        trailerRcl.setAdapter(tAdapter);
+
+        setTrailerClickListener();
     }
 
     private void setupViewModel() {
@@ -83,8 +97,9 @@ public class MovieActivity extends AppCompatActivity {
         mViewModel.isFavorite(movieItem.getId()).observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer integer) {
-                if (integer==1){ favoriteButton.setFavorite(true,false); }
-                else favoriteButton.setFavorite(false, false);
+                if (integer == 1) {
+                    favoriteButton.setFavorite(true, false);
+                } else favoriteButton.setFavorite(false, false);
 
                 setupFavorite();
             }
@@ -93,7 +108,7 @@ public class MovieActivity extends AppCompatActivity {
 
     // Gets values from Intent and pass to setValuesToViews method
     private void getValuesFromIntent() {
-        if (getIntent().hasExtra("Values")){
+        if (getIntent().hasExtra("Values")) {
             Bundle bundle = getIntent().getBundleExtra("Values");
             movieItem = bundle.getParcelable(MainActivity.MOVIE_KEY);
 
@@ -127,13 +142,13 @@ public class MovieActivity extends AppCompatActivity {
         tv_fav.setText(vote_average);
     }
 
-    private void setupFavorite(){
+    private void setupFavorite() {
         favoriteButton.setOnFavoriteChangeListener(new MaterialFavoriteButton.OnFavoriteChangeListener() {
             @Override
             public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite) {
-                if (favorite){
+                if (favorite) {
                     mViewModel.insertFavMovie(convertToFavorite());
-                }else {
+                } else {
                     mViewModel.deleteFavMovie(convertToFavorite());
                 }
             }
@@ -146,11 +161,33 @@ public class MovieActivity extends AppCompatActivity {
         return gson.fromJson(json, FavoriteMovie.class);
     }
 
-    private void populateData(){
+    private void populateData() {
         mViewModel.getCast().observe(this, new Observer<List<CastItem>>() {
             @Override
             public void onChanged(@Nullable List<CastItem> castItems) {
-                cAdapter.setCastItems(castItems);
+                if (castItems != null && castItems.size() != 0)
+                    cAdapter.setCastItems(castItems);
+            }
+        });
+
+        mViewModel.getTrailers().observe(this, new Observer<List<TrailerItem>>() {
+            @Override
+            public void onChanged(@Nullable List<TrailerItem> trailerItems) {
+                if (trailerItems != null && trailerItems.size() != 0)
+                    tAdapter.setTrailerItems(trailerItems);
+            }
+        });
+    }
+
+    private void setTrailerClickListener(){
+        ItemClickSupport.addTo(trailerRcl).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                String URL = Constants.YOUTUBE_BASE + tAdapter.getTrailerItems().get(position).getId();
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(URL));
+                startActivity(intent);
             }
         });
     }

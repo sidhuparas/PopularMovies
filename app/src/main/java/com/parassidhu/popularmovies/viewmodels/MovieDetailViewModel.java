@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import com.parassidhu.popularmovies.database.MovieRepository;
 import com.parassidhu.popularmovies.models.CastItem;
 import com.parassidhu.popularmovies.models.FavoriteMovie;
+import com.parassidhu.popularmovies.models.ReviewItem;
+import com.parassidhu.popularmovies.models.TrailerItem;
 
 import java.util.List;
 
@@ -17,6 +19,9 @@ public class MovieDetailViewModel extends AndroidViewModel {
     private MovieRepository mRepository;
 
     private LiveData<List<CastItem>> casts;
+    private LiveData<List<TrailerItem>> trailers;
+    private LiveData<List<ReviewItem>> reviews;
+
 
     public MovieDetailViewModel(@NonNull Application application, String id) {
         super(application);
@@ -25,6 +30,8 @@ public class MovieDetailViewModel extends AndroidViewModel {
         if (casts == null)
             casts = mRepository.getCast(id);
 
+        if (trailers == null)
+            trailers = mRepository.getTrailers(id);
     }
 
     public void insertFavMovie(FavoriteMovie movie) {
@@ -43,4 +50,11 @@ public class MovieDetailViewModel extends AndroidViewModel {
         return casts;
     }
 
+    public LiveData<List<TrailerItem>> getTrailers() {
+        return trailers;
+    }
+
+    public LiveData<List<ReviewItem>> getReviews() {
+        return reviews;
+    }
 }

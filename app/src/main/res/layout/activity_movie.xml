@@ -113,8 +113,25 @@
             android:focusable="false"
             android:layout_below="@id/labelCaste"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginRight="16dp" />
+
+        <TextView
+            android:id="@+id/labelTrailers"
+            style="@style/Heading"
+            tools:text="Trailers"
+            android:text="@string/trailers"
+            android:layout_below="@id/castRcl"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trailerRcl"
+            android:descendantFocusability="blocksDescendants"
+            android:focusable="false"
+            android:layout_below="@id/labelTrailers"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
+
     </RelativeLayout>
     
 </android.support.v4.widget.NestedScrollView>

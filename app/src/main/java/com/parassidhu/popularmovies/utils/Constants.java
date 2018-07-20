@@ -13,4 +13,5 @@ public class Constants {
     public static final String FAVORITES_KEY = "favs";
 
     public static final String MOVIE_BASE = "http://api.themoviedb.org/3/movie/";
+    public static final String YOUTUBE_BASE = "https://www.youtube.com/watch?v=";
 }
