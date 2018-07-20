@@ -2,9 +2,13 @@ package com.parassidhu.popularmovies.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,12 +16,20 @@ import android.widget.TextView;
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.google.gson.Gson;
 import com.parassidhu.popularmovies.R;
+import com.parassidhu.popularmovies.adapters.CastAdapter;
+import com.parassidhu.popularmovies.adapters.ReviewAdapter;
+import com.parassidhu.popularmovies.adapters.TrailerAdapter;
+import com.parassidhu.popularmovies.models.CastItem;
 import com.parassidhu.popularmovies.models.FavoriteMovie;
 import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
+import com.parassidhu.popularmovies.viewmodels.MovieDetailViewModel;
+import com.parassidhu.popularmovies.viewmodels.MovieDetailViewModelFactory;
 import com.parassidhu.popularmovies.viewmodels.MovieViewModel;
 import com.parassidhu.popularmovies.viewmodels.MovieViewModelFactory;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +45,14 @@ public class MovieActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.favorite) MaterialFavoriteButton favoriteButton;
 
-    private MovieViewModel mViewModel;
+    @BindView(R.id.castRcl) RecyclerView castRcl;
+
+    private MovieDetailViewModel mViewModel;
     private MovieItem movieItem;
+
+    private CastAdapter cAdapter;
+    private TrailerAdapter tAdapter;
+    private ReviewAdapter rAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +65,20 @@ public class MovieActivity extends AppCompatActivity {
 
         getValuesFromIntent();
         setupViewModel();
+        setAdapters();
+        populateData();
+    }
+
+    private void setAdapters() {
+        cAdapter = new CastAdapter(this);
+        castRcl.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL,false));
+        castRcl.setAdapter(cAdapter);
     }
 
     private void setupViewModel() {
-        mViewModel = ViewModelProviders.of(this, new MovieViewModelFactory
-                (this.getApplication())).get(MovieViewModel.class);
+        mViewModel = ViewModelProviders.of(this, new MovieDetailViewModelFactory(
+                this.getApplication(), String.valueOf(movieItem.getId()))).get(MovieDetailViewModel.class);
 
         mViewModel.isFavorite(movieItem.getId()).observe(this, new Observer<Integer>() {
             @Override
@@ -89,7 +116,10 @@ public class MovieActivity extends AppCompatActivity {
                 .error(R.drawable.img_loading_error)
                 .into(iv_backdrop);
 
-        Picasso.get().load(poster).placeholder(R.drawable.img_loading_portrait).into(iv_poster);
+        Picasso.get().load(poster)
+                .placeholder(R.drawable.img_loading_portrait)
+                .error(R.drawable.img_loading_error)
+                .into(iv_poster);
 
         tv_title.setText(title);
         tv_release_date.setText(release_date);
@@ -114,5 +144,14 @@ public class MovieActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = gson.toJson(movieItem);
         return gson.fromJson(json, FavoriteMovie.class);
+    }
+
+    private void populateData(){
+        mViewModel.getCast().observe(this, new Observer<List<CastItem>>() {
+            @Override
+            public void onChanged(@Nullable List<CastItem> castItems) {
+                cAdapter.setCastItems(castItems);
+            }
+        });
     }
 }

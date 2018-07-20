@@ -17,6 +17,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.parassidhu.popularmovies.BuildConfig;
+import com.parassidhu.popularmovies.models.CastItem;
 import com.parassidhu.popularmovies.models.FavoriteMovie;
 import com.parassidhu.popularmovies.models.MovieItem;
 import com.parassidhu.popularmovies.utils.Constants;
@@ -174,5 +178,38 @@ public class MovieRepository {
         ConnectivityManager cm = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public LiveData<List<CastItem>> getCast(String id){
+        final MutableLiveData<List<CastItem>> result = new MutableLiveData<>();
+        String URL = "http://api.themoviedb.org/3/movie/" + id + "/casts?api_key=" + BuildConfig.API_KEY;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    JSONArray jsonArray = obj.optJSONArray("cast");
+
+                    Gson gson = new Gson();
+                    List<CastItem> list = gson.fromJson(jsonArray.toString(),
+                            new TypeToken<List<CastItem>>(){}.getType());
+
+                    result.setValue(list);
+                }catch (Exception e){
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(application);
+        requestQueue.add(stringRequest);
+
+        return result;
     }
 }

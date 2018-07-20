@@ -153,11 +153,7 @@ public class MainActivity extends AppCompatActivity {
             if (movieItems != null) {
                 if (movieItems.size() != 0) {
                     moviesItems.clear();
-                    if (!isOnline()) {
-                        if (sortBy.equals(Constants.POPULAR_LIST))
-                            Collections.sort(movieItems, compareByPopularity);
-                        else Collections.sort(movieItems, compareByRating);
-                    }
+                    sortOfflineMovies(movieItems);
 
                     Map<Integer, MovieItem> map = removeDuplicateValues(movieItems);
 
@@ -170,6 +166,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void sortOfflineMovies(@NonNull List<MovieItem> movieItems) {
+        if (!isOnline()) {
+            if (sortBy.equals(Constants.POPULAR_LIST))
+                Collections.sort(movieItems, compareByPopularity);
+            else if(sortBy.equals(Constants.TOP_RATED_LIST))
+                Collections.sort(movieItems, compareByRating);
+        }
+    }
 
     @NonNull
     private Map<Integer, MovieItem> removeDuplicateValues(@NonNull List<MovieItem> movieItems) {

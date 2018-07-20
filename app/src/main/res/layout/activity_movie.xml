@@ -31,6 +31,7 @@
             android:layout_marginTop="100dp"
             android:src="@color/black"
             android:layout_marginLeft="20dp"
+            android:padding="1dp"
             android:elevation="5dp"
             android:transitionName="@string/img_trans"/>
 
@@ -81,14 +82,10 @@
 
         <TextView
             android:id="@+id/synopsis"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_below="@id/poster"
-            android:textColor="@color/black"
-            tools:text="Release date"
-            android:text="Synopsis"
-            android:textStyle="bold"
-            android:layout_margin="20dp"/>
+            tools:text="Synopsis Title"
+            android:text="@string/synopsis"
+            style="@style/Heading"/>
 
 
         <TextView
@@ -97,11 +94,27 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/synopsis"
             android:textColor="@color/black"
-            tools:text="Release date"
+            tools:text="Synopsis"
             android:layout_marginLeft="20dp"
+            android:layout_marginRight="16dp" />
+
+        <TextView
+            android:id="@+id/labelCaste"
+            style="@style/Heading"
+            tools:text="Cast"
+            android:text="@string/cast"
+            android:layout_below="@id/overview"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/castRcl"
+            android:descendantFocusability="blocksDescendants"
+            android:focusable="false"
+            android:layout_below="@id/labelCaste"
+            android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"/>
-        
     </RelativeLayout>
     
 </android.support.v4.widget.NestedScrollView>
