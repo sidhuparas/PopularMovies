@@ -21,7 +21,8 @@
             android:layout_height="250dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:transitionName="@string/img_trans" />
+            android:transitionName="@string/img_trans"
+            android:contentDescription="@string/desc_poster"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"

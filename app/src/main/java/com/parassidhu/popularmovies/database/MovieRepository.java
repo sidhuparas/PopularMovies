@@ -33,6 +33,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MovieRepository {
 
@@ -60,7 +61,7 @@ public class MovieRepository {
 
     public void deleteFavMovie(FavoriteMovie movie) { new deleteFavAsync(movieDao).execute(movie); }
 
-    public void insertMovies(List<MovieItem> movies) { new insertAsyncTask(movieDao).execute(movies); }
+    private void insertMovies(List<MovieItem> movies) { new insertAsyncTask(movieDao).execute(movies); }
 
     public LiveData<Integer> isFavorite(int id) { return movieDao.isFavorite(id); }
 
@@ -76,7 +77,7 @@ public class MovieRepository {
         protected Void doInBackground(final List<MovieItem>... params) {
             try {
                 mAsyncTaskDao.insertMovies(params[0]);
-            }catch (Exception e){}
+            }catch (Exception ignored){}
             return null;
         }
     }
@@ -178,7 +179,7 @@ public class MovieRepository {
 
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        NetworkInfo networkInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
 
@@ -201,7 +202,7 @@ public class MovieRepository {
 
                         result.setValue(list);
                     }
-                }catch (Exception e){ }
+                }catch (Exception ignored){ }
             }
         }, new Response.ErrorListener() {
             @Override

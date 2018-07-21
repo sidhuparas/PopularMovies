@@ -43,6 +43,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -149,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
     Observer<List<MovieItem>> allMoviesObserver = new Observer<List<MovieItem>>() {
         @Override
         public void onChanged(@Nullable List<MovieItem> movieItems) {
-            Log.d(TAG, "onChanged: " + movieItems.size());
             if (movieItems != null) {
                 if (movieItems.size() != 0) {
                     moviesItems.clear();
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        NetworkInfo networkInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
 

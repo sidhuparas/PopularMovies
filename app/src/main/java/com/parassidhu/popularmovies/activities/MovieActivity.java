@@ -36,6 +36,7 @@ import com.parassidhu.popularmovies.viewmodels.MovieViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,7 +73,7 @@ public class MovieActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setTitle("");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         getValuesFromIntent();
         setupViewModel();
@@ -120,6 +121,7 @@ public class MovieActivity extends AppCompatActivity {
             Bundle bundle = getIntent().getBundleExtra("Values");
             movieItem = bundle.getParcelable(MainActivity.MOVIE_KEY);
 
+            assert movieItem != null;
             String backdrop = Constants.BASE_BACKDROP + movieItem.getBackdropPath();
             String poster = Constants.BASE_IMAGE + movieItem.getPosterPath();
             String title = movieItem.getTitle();

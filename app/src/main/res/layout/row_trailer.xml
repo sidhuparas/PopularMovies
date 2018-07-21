@@ -2,16 +2,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingRight="10dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:paddingEnd="10dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="RtlSymmetry">
 
    <ImageView
        android:layout_width="300dp"
        android:layout_height="200dp"
        android:id="@+id/image"
        tools:src="@drawable/img_loading_portrait"
-       android:scaleType="centerCrop"/>
+       android:scaleType="centerCrop"
+       android:contentDescription="@string/desc_image"/>
 
     <ImageView
         android:layout_width="70dp"
@@ -19,6 +20,7 @@
         android:src="@drawable/img_yt_logo"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:contentDescription="@string/desc_youtube"/>
 
 </FrameLayout>

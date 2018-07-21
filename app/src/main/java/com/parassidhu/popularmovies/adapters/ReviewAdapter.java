@@ -56,7 +56,7 @@ public class ReviewAdapter extends RecyclerView.Adapter {
         @BindView(R.id.username) TextView username;
         @BindView(R.id.review) TextView review;
 
-        public ReviewViewHolder(@NonNull View itemView) {
+        ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

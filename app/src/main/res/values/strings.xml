@@ -5,8 +5,6 @@
     <string name="chip2">Top Rated</string>
     <string name="chip3">Favorites</string>
 
-    <string name="sort">Sort by:</string>
-
     <string name="img_trans">image_transition</string>
     <string name="internet_retry">Internet is not accessible right now. Try again later</string>
     <string name="retry">Retry</string>
@@ -16,4 +14,8 @@
     <string name="reviews">Reviews</string>
     <string name="desc_cover">Cover Image</string>
     <string name="desc_poster">Movie Poster</string>
+    <string name="desc_app_icon">App Icon</string>
+    <string name="desc_user">Review User Image</string>
+    <string name="desc_image">Trailer YouTube Image</string>
+    <string name="desc_youtube">YouTube Logo</string>
 </resources>

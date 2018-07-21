@@ -16,7 +16,8 @@
             android:layout_height="50dp"
             android:adjustViewBounds="true"
             android:src="@drawable/app_icon"
-            android:layout_gravity="start" />
+            android:layout_gravity="start"
+            android:contentDescription="@string/desc_app_icon"/>
 
         <TextView
             android:layout_width="wrap_content"

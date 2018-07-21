@@ -23,7 +23,7 @@ public class MovieDetailViewModel extends AndroidViewModel {
     private LiveData<List<ReviewItem>> reviews;
 
 
-    public MovieDetailViewModel(@NonNull Application application, String id) {
+    MovieDetailViewModel(@NonNull Application application, String id) {
         super(application);
         mRepository = new MovieRepository(application);
 

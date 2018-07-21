@@ -41,8 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/backdrop"
-            android:layout_toRightOf="@id/poster"
-            android:layout_toLeftOf="@id/favorite"
+            android:layout_toEndOf="@id/poster"
+            android:layout_toStartOf="@id/favorite"
             android:layout_margin="16dp"
             android:maxLines="3"
             android:ellipsize="end"
@@ -55,9 +55,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/backdrop"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
-            />
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp" />
 
         <TextView
             android:id="@+id/releaseDate"
@@ -66,7 +65,7 @@
             android:layout_below="@id/title"
             android:textColor="@color/black"
             tools:text="Release date"
-            android:layout_toRightOf="@id/poster"
+            android:layout_toEndOf="@id/poster"
             android:layout_marginStart="16dp"/>
 
         <TextView
@@ -96,8 +95,8 @@
             android:layout_below="@id/synopsis"
             android:textColor="@color/black"
             tools:text="Synopsis"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="16dp" />
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="16dp" />
 
         <TextView
             android:id="@+id/labelCaste"

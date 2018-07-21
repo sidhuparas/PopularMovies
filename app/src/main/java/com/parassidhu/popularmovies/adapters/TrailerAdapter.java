@@ -56,7 +56,7 @@ public class TrailerAdapter extends RecyclerView.Adapter{
     class TrailerViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.image) ImageView image;
-        public TrailerViewHolder(@NonNull View itemView) {
+        TrailerViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
