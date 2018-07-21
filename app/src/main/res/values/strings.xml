@@ -18,4 +18,5 @@
     <string name="desc_user">Review User Image</string>
     <string name="desc_image">Trailer YouTube Image</string>
     <string name="desc_youtube">YouTube Logo</string>
+    <string name="share">Share</string>
 </resources>

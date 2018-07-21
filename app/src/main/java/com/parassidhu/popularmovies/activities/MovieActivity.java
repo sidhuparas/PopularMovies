@@ -6,15 +6,20 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.google.gson.Gson;
@@ -65,6 +70,8 @@ public class MovieActivity extends AppCompatActivity {
     private CastAdapter cAdapter;
     private TrailerAdapter tAdapter;
     private ReviewAdapter rAdapter;
+
+    private String trailerKey = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,8 +192,8 @@ public class MovieActivity extends AppCompatActivity {
             public void onChanged(@Nullable List<TrailerItem> trailerItems) {
                 if (trailerItems != null && trailerItems.size() != 0) {
                     labelTrailers.setVisibility(View.VISIBLE);
-
-                    if (trailerRcl.getAdapter()==null){
+                    trailerKey = trailerItems.get(0).getId();
+                    if (trailerRcl.getAdapter() == null) {
                         tAdapter = new TrailerAdapter(MovieActivity.this, trailerItems);
                         trailerRcl.setAdapter(tAdapter);
                     } else {
@@ -202,7 +209,7 @@ public class MovieActivity extends AppCompatActivity {
                 if (reviewItems != null && reviewItems.size() != 0) {
                     labelReviews.setVisibility(View.VISIBLE);
 
-                    if (reviewRcl.getAdapter()==null){
+                    if (reviewRcl.getAdapter() == null) {
                         rAdapter = new ReviewAdapter(MovieActivity.this, reviewItems);
                         reviewRcl.setAdapter(rAdapter);
                     } else {
@@ -213,7 +220,7 @@ public class MovieActivity extends AppCompatActivity {
         });
     }
 
-    private void setTrailerClickListener(){
+    private void setTrailerClickListener() {
         ItemClickSupport.addTo(trailerRcl).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -224,5 +231,31 @@ public class MovieActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.share){
+            if (!trailerKey.isEmpty()) {
+                String trailerUrl = Constants.YOUTUBE_BASE + trailerKey;
+                String text = "Watch Trailer: " + movieItem.getTitle() + "\n" + trailerUrl;
+                ShareCompat.IntentBuilder.from(this)
+                        .setChooserTitle("Share Trailer Using...")
+                        .setType("text/plain")
+                        .setText(text).startChooser();
+            }else {
+                Toast.makeText(this, "There's no trailer to show!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+            return super.onOptionsItemSelected(item);
     }
 }
