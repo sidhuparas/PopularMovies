@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.github.ivbaranov:materialfavoritebutton:0.1.4'
     implementation 'com.facebook.stetho:stetho:1.5.0'
 
+
     def lifecycle_version = "1.1.1"
 
     // ViewModel and LiveData

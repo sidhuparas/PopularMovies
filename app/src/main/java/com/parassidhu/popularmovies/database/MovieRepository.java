@@ -23,6 +23,7 @@ import com.parassidhu.popularmovies.BuildConfig;
 import com.parassidhu.popularmovies.models.CastItem;
 import com.parassidhu.popularmovies.models.FavoriteMovie;
 import com.parassidhu.popularmovies.models.MovieItem;
+import com.parassidhu.popularmovies.models.ReviewItem;
 import com.parassidhu.popularmovies.models.TrailerItem;
 import com.parassidhu.popularmovies.utils.Constants;
 
@@ -228,6 +229,38 @@ public class MovieRepository {
                         Gson gson = new Gson();
                         List<TrailerItem> list = gson.fromJson(jsonArray.toString(),
                                 new TypeToken<List<TrailerItem>>() {
+                                }.getType());
+
+                        result.setValue(list);
+                    }
+                }catch (Exception ignored){ }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) { }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(application);
+        requestQueue.add(stringRequest);
+
+        return result;
+    }
+
+    public LiveData<List<ReviewItem>> getReviews(String id){
+        final MutableLiveData<List<ReviewItem>> result = new MutableLiveData<>();
+        String URL = "http://api.themoviedb.org/3/movie/" + id + "/reviews?api_key=" + BuildConfig.API_KEY;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    JSONArray jsonArray = obj.optJSONArray("results");
+
+                    if (jsonArray.length()>0) {
+                        Gson gson = new Gson();
+                        List<ReviewItem> list = gson.fromJson(jsonArray.toString(),
+                                new TypeToken<List<ReviewItem>>() {
                                 }.getType());
 
                         result.setValue(list);

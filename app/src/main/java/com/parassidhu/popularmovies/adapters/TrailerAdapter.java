@@ -20,10 +20,11 @@ import butterknife.ButterKnife;
 public class TrailerAdapter extends RecyclerView.Adapter{
 
     private Context context;
-    private List<TrailerItem> trailerItems = new ArrayList<>();
+    private List<TrailerItem> trailerItems;
 
-    public TrailerAdapter(Context context) {
+    public TrailerAdapter(Context context, List<TrailerItem> trailerItems) {
         this.context = context;
+        this.trailerItems = trailerItems;
     }
 
     @NonNull

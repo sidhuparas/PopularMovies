@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
     public void retry() {
         layout.setVisibility(View.GONE);
         showProgressBar(true);
-        mViewModel.getAllMovies(getURL(pageNum), sortBy);
+        newChipClick();
     }
 
     // After configuration changes, select a chip

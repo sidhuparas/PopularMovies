@@ -25,6 +25,7 @@ import com.parassidhu.popularmovies.adapters.TrailerAdapter;
 import com.parassidhu.popularmovies.models.CastItem;
 import com.parassidhu.popularmovies.models.FavoriteMovie;
 import com.parassidhu.popularmovies.models.MovieItem;
+import com.parassidhu.popularmovies.models.ReviewItem;
 import com.parassidhu.popularmovies.models.TrailerItem;
 import com.parassidhu.popularmovies.utils.Constants;
 import com.parassidhu.popularmovies.utils.ItemClickSupport;
@@ -52,6 +53,10 @@ public class MovieActivity extends AppCompatActivity {
 
     @BindView(R.id.castRcl) RecyclerView castRcl;
     @BindView(R.id.trailerRcl) RecyclerView trailerRcl;
+    @BindView(R.id.reviewsRcl) RecyclerView reviewRcl;
+
+    @BindView(R.id.labelTrailers) TextView labelTrailers;
+    @BindView(R.id.labelReviews) TextView labelReviews;
 
     private MovieDetailViewModel mViewModel;
     private MovieItem movieItem;
@@ -77,7 +82,6 @@ public class MovieActivity extends AppCompatActivity {
 
     private void setAdapters() {
         cAdapter = new CastAdapter(this);
-        tAdapter = new TrailerAdapter(this);
 
         castRcl.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
@@ -85,7 +89,11 @@ public class MovieActivity extends AppCompatActivity {
 
         trailerRcl.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
-        trailerRcl.setAdapter(tAdapter);
+        //trailerRcl.setAdapter(tAdapter);
+
+        reviewRcl.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL, false));
+        //reviewRcl.setAdapter(rAdapter);
 
         setTrailerClickListener();
     }
@@ -173,8 +181,32 @@ public class MovieActivity extends AppCompatActivity {
         mViewModel.getTrailers().observe(this, new Observer<List<TrailerItem>>() {
             @Override
             public void onChanged(@Nullable List<TrailerItem> trailerItems) {
-                if (trailerItems != null && trailerItems.size() != 0)
-                    tAdapter.setTrailerItems(trailerItems);
+                if (trailerItems != null && trailerItems.size() != 0) {
+                    labelTrailers.setVisibility(View.VISIBLE);
+
+                    if (trailerRcl.getAdapter()==null){
+                        tAdapter = new TrailerAdapter(MovieActivity.this, trailerItems);
+                        trailerRcl.setAdapter(tAdapter);
+                    } else {
+                        tAdapter.setTrailerItems(trailerItems);
+                    }
+                }
+            }
+        });
+
+        mViewModel.getReviews().observe(this, new Observer<List<ReviewItem>>() {
+            @Override
+            public void onChanged(@Nullable List<ReviewItem> reviewItems) {
+                if (reviewItems != null && reviewItems.size() != 0) {
+                    labelReviews.setVisibility(View.VISIBLE);
+
+                    if (reviewRcl.getAdapter()==null){
+                        rAdapter = new ReviewAdapter(MovieActivity.this, reviewItems);
+                        reviewRcl.setAdapter(rAdapter);
+                    } else {
+                        rAdapter.setReviewItems(reviewItems);
+                    }
+                }
             }
         });
     }

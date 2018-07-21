@@ -32,6 +32,9 @@ public class MovieDetailViewModel extends AndroidViewModel {
 
         if (trailers == null)
             trailers = mRepository.getTrailers(id);
+
+        if (reviews == null)
+            reviews = mRepository.getReviews(id);
     }
 
     public void insertFavMovie(FavoriteMovie movie) {

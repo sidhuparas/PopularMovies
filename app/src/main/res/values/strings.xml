@@ -13,4 +13,7 @@
     <string name="synopsis">Synopsis</string>
     <string name="cast">Cast</string>
     <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="desc_cover">Cover Image</string>
+    <string name="desc_poster">Movie Poster</string>
 </resources>
