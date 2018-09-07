@@ -28,7 +28,7 @@ public class MovieViewModel extends AndroidViewModel {
     public MovieViewModel(@NonNull Application application) {
         super(application);
         mRepository = new MovieRepository(application);
-        mDb = MovieDatabase.getDatabase(application);
+        mDb = MovieDatabase.Companion.getDatabase(application);
         this.application = application;
 
         decideNetworkRequestOrExisting(Constants.FIRST_TIME_URL);
