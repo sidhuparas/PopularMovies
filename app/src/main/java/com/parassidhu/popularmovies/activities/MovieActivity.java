@@ -221,7 +221,7 @@ public class MovieActivity extends AppCompatActivity {
     }
 
     private void setTrailerClickListener() {
-        ItemClickSupport.addTo(trailerRcl).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+        ItemClickSupport.Companion.addTo(trailerRcl).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 String URL = Constants.YOUTUBE_BASE + tAdapter.getTrailerItems().get(position).getId();

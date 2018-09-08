@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Sets listener for individual movie click
     private void setMovieClickListener() {
-        ItemClickSupport.addTo(moviesList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+        ItemClickSupport.Companion.addTo(moviesList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 Intent intent = new Intent(MainActivity.this, MovieActivity.class);
