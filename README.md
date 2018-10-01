@@ -4,7 +4,7 @@
 
 <h1 align="center">Popular Movies</h1>
 
-This Android Application fetches Popular and Top-Rated movies from TheMovieDB API and show them in a user-friendly interface.
+This Android Application fetches Popular and Top-Rated movies from TheMovieDB API and show them in a user-friendly interface. It was originally written in Java and then converted step by step into Kotlin. For Java version, click <a href="https://github.com/sidhuparas/PopularMovies/tree/7ff1e7e699c5a111287a4a127e58373da65032b2">here</a>.
 
 <a href="http://downloadinformer.com/downloads/pop-mov.apk">Download APK</a>
 
@@ -23,7 +23,8 @@ This Android Application fetches Popular and Top-Rated movies from TheMovieDB AP
 - Volley (For network operations)
 - Picasso (For loading and caching images)
 - Gson (To handle JSON parsing)
-- ButterKnife (To bind the views. TODO: Use DataBinding instead)
+- ~ButterKnife (To bind the views)~ Kotlin Android Extensions
+
 
 ## Screenshots
 
